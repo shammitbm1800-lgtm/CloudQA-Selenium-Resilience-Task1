@@ -31,8 +31,21 @@ Bash
 dotnet run "[https://app.cloudqa.io/home/AutomationPracticeForm](https://app.cloudqa.io/home/AutomationPracticeForm)"
 
 
-##Approach & Limitations
+## Approach & Limitations
 
-Approach: Utilizes a Hybrid Architecture. C# handles recursive structural discovery (traversing deep Shadow DOM hosts and nested IFrames natively), while an injected JavaScript payload executes inside each boundary to bypass W3C restrictions, defeat React/Angular event blockers, and map fields positionally to avoid decoys.
+### Approach
 
-Limitations: Third-party non-standard custom combobox components (like custom React-select wrappers) require explicit specialized click-and-type logic rather than native <select> element selectors.
+The solution uses a hybrid C# Selenium and JavaScript architecture.
+
+- **C# Selenium:** Recursively discovers and traverses Shadow DOM hosts and nested IFrames.
+- **JavaScript:** Identifies form fields using their visible labels and interacts with them by setting values and dispatching input/change events.
+- **Resilient identification:** Avoids depending on fixed IDs, names, classes, or hardcoded XPath selectors.
+- **Dynamic URL:** Accepts a configurable target URL through command-line arguments or an environment variable.
+
+### Limitations
+
+- Closed Shadow DOMs cannot be accessed using standard Selenium Shadow DOM traversal.
+- Custom dropdown components may require specialized interaction logic.
+- Significant changes to visible labels or form semantics may require updates to the field-identification logic.
+- JavaScript event dispatching may not work with every framework or custom control.
+- Cross-origin and dynamically loaded frames may require additional handling and synchronization.
